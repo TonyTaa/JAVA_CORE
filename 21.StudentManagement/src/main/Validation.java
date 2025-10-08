@@ -7,13 +7,13 @@ public class Validation {
 
 	/**
 	 * ham validate input dang text
-	 * 
+	 * @param true nhập mới false chỉ kiểm tra
 	 * @return input text hop le
 	 */
-	public String checkValidateText() {
+	public String checkValidateText(boolean allowEmpty) {
 		while (true) {
 			String input = sc.nextLine().toLowerCase().trim();
-			if (input.isEmpty()) {
+			if (!allowEmpty && input.isEmpty()) {
 				System.out.println("Cannot empty");
 				continue;
 			}
@@ -85,7 +85,7 @@ public class Validation {
 	 */
 	public String checkInputCourse() {
 		while (true) {
-			String result = checkValidateText();
+			String result = checkValidateText(true);
 			if (result.equalsIgnoreCase("java") || result.equalsIgnoreCase(".net")
 					|| result.equalsIgnoreCase("c/c++")) {
 				return result;

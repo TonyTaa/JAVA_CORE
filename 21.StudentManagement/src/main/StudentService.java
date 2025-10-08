@@ -69,10 +69,10 @@ public class StudentService {
     }
 
     // ====== UPDATE ======
-    public void updateStudent(Student target, String name, Integer semester, String crs) {
+    public void updateStudent(Student target, Integer semester, String crs) {
         Student updated = new Student(
                 target.getId(),
-                name != null && !name.trim().isEmpty() ? name : target.getStudentName(),
+                target.getStudentName(),
                 semester != null ? semester : target.getSemester(),
                 crs != null && !crs.trim().isEmpty() ? crs : target.getCourseName()
         );

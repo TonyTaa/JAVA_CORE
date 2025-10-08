@@ -44,14 +44,14 @@ public class StudentController {
 	/**
 	 * Ham nhap lieu tao sinh vien moi
 	 */
-	private void handleCreate() {
+	private void handleCreate() throws RuntimeException {
 		while (true) {
 			try {
 				System.out.println("----- Create -----");
 				System.out.print("Id: ");
 				int id = val.checkValidateNumber();
 				System.out.print("Student Name: ");
-				String name = val.checkValidateText();
+				String name = val.checkValidateText(true);
 				System.out.print("Semester: ");
 				int semester = val.checkValidateNumber();
 				System.out.print("Course Name: ");
@@ -72,13 +72,9 @@ public class StudentController {
 				// nếu tạo thành công và không gặp lỗi thì break vòng while
 				break;
 
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-				System.out.print("Do you want to re-enter student info? (Y/N): ");
-				boolean retry = val.checkValidateTextOption("y", "n");
-				if (!retry) {
-					return; // quay lại menu chính
-				}
+			} catch (RuntimeException e) {
+				System.out.println(e.getMessage());
+				System.out.println("Re-enter Student: ");
 			}
 		}
 	}
@@ -89,7 +85,7 @@ public class StudentController {
 	private void handleFindAndSort() {
 		System.out.println("-----Find and Sort-----");
 		System.out.print("Name: ");
-		String name = val.checkValidateText();
+		String name = val.checkValidateText(true);
 		List<Student> stdlist = ser.findAndSortStudentList(name);
 		if (!stdlist.isEmpty()) {
 			System.out.printf("%-15s%-15s%-15s\n", "StudentName", "Semester", "CourseName");
@@ -155,14 +151,6 @@ public class StudentController {
 					// Update
 					System.out.println("-----Update-----");
 
-					System.out.print("Enter name (leave empty to keep current): ");
-					String newName = sc.nextLine().trim();
-					if (newName.isEmpty()) {
-						newName = selectedStd.getStudentName();
-					} else {
-						newName = val.checkValidateText();
-					}
-
 					System.out.print("Enter semester (leave empty to keep current): ");
 					String semesterInput = sc.nextLine().trim();
 					int newSemester;
@@ -178,15 +166,13 @@ public class StudentController {
 					}
 
 					System.out.print("Course Name (leave empty to keep current): ");
-					String newCourse = sc.nextLine().trim();
-					if (!newCourse.isEmpty()) {
-						newCourse = val.checkInputCourse();
-					} else {
-						newCourse = selectedStd.getCourseName();
+					String newCourse = val.checkInputCourse();
+					if (newCourse.isEmpty()) {
+					    newCourse = selectedStd.getCourseName();
 					}
 
 					// Gọi service update (có check duplicate/conflict)
-					ser.updateStudent(selectedStd, newName, newSemester, newCourse);
+					ser.updateStudent(selectedStd, newSemester, newCourse);
 					System.out.println("Update successful!");
 				} else {
 					// Delete
@@ -199,11 +185,7 @@ public class StudentController {
 
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
-				System.out.print("Do you want to try again? (Y/N): ");
-				boolean retry = val.checkValidateTextOption("y", "n");
-				if (!retry) {
-					return; // quay lại menu chính
-				}
+				System.out.print("Re-enter Student: ");
 			}
 		}
 	}
